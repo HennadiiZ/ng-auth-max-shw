@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
+import { Observable } from 'rxjs';
+import { AuthResponseData, AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -21,27 +22,41 @@ export class AuthComponent {
     if(!form.valid){
       return;
     }
+
+    let authObs: Observable<AuthResponseData>;
+    
     this.isLoading = true;
     if(this.isLoginMode){
-      this.authService.login(form.value.email, form.value.password).subscribe(resData=>{
-        console.log(resData);
-        this.isLoading = false;
-       }, errorMessage =>{
-         console.log(errorMessage);
-         this.isLoading = false;
-         this.error = errorMessage 
-       })
+      authObs = this.authService.login(form.value.email, form.value.password)
+      //.subscribe(resData=>{
+      //   console.log(resData);
+      //   this.isLoading = false;
+      //  }, errorMessage =>{
+      //    console.log(errorMessage);
+      //    this.isLoading = false;
+      //    this.error = errorMessage 
+      //  })
     }else{
-      this.authService.signup(form.value.email, form.value.password).subscribe(resData=>{
-        console.log(resData);
-        this.isLoading = false;
-       }, errorMessage =>{
-         console.log(errorMessage);
-         this.isLoading = false;
-         this.error = errorMessage 
-       });
+      authObs = this.authService.signup(form.value.email, form.value.password)
+      // .subscribe(resData=>{
+      //   console.log(resData);
+      //   this.isLoading = false;
+      //  }, errorMessage =>{
+      //    console.log(errorMessage);
+      //    this.isLoading = false;
+      //    this.error = errorMessage 
+      //  });
       //  console.log(form.value);
     }
+      authObs.subscribe(resData=>{
+        console.log(resData);
+        this.isLoading = false;
+      }, errorMessage =>{
+        console.log(errorMessage);
+        this.isLoading = false;
+        this.error = errorMessage 
+      })
+
     form.reset();
      
   }

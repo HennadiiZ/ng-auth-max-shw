@@ -23,7 +23,7 @@ export class AuthService{
     }
 
     signup(email: string, password: string){
-       return  this.http.post<AuthResponseData>(`${this.myUrl}${this.apiKey}` , 
+        return  this.http.post<AuthResponseData>(`${this.myUrl}${this.apiKey}` , 
         {
             email: email,
             password: password,

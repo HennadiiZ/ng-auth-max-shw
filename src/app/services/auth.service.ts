@@ -34,9 +34,10 @@ export class AuthService{
             returnSecureToken: true
         } 
       ).pipe(catchError(this.handleError),tap(response=>{
-        const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-        const user = new User(response.email, response.localId, response.idToken, expDate);
-        this.user.next(user);
+        // const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
+        // const user = new User(response.email, response.localId, response.idToken, expDate);
+        // this.user.next(user);
+        this.handleAuthentication(response.email, response.localId, response.idToken, +response.expiresIn);
       }));
     }
 
@@ -47,10 +48,26 @@ export class AuthService{
             password,
             returnSecureToken: true
         } 
-      ).pipe(catchError(this.handleError))
+      ).pipe(catchError(this.handleError),tap(response=>{
+        // const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
+        // const user = new User(response.email, response.localId, response.idToken, expDate);
+        // this.user.next(user);
+        this.handleAuthentication(response.email, response.localId, response.idToken, +response.expiresIn);
+      }))
     }
 
-    //private handleAuthentication(email: string, token: string, expiresIn: number){}
+    private handleAuthentication(email: string, userId: string,token: string, expiresIn: number){
+        const expDate = new Date(
+            new Date().getTime() + expiresIn * 1000
+        );
+        const user = new User(
+            email, 
+            userId,
+            token,
+            expDate, 
+        );
+        this.user.next(user);
+    }
 
     private handleError(errResp: HttpErrorResponse){
         let errorMessage ='An unknown error occurred'
@@ -74,3 +91,5 @@ export class AuthService{
         return throwError( errorMessage)
     }
 }
+
+// git commit -m "(Refactoring)creating and storing the User Data 2"

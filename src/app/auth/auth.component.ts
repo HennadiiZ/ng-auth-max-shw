@@ -28,25 +28,8 @@ export class AuthComponent {
     this.isLoading = true;
     if(this.isLoginMode){
       authObs = this.authService.login(form.value.email, form.value.password)
-      //.subscribe(resData=>{
-      //   console.log(resData);
-      //   this.isLoading = false;
-      //  }, errorMessage =>{
-      //    console.log(errorMessage);
-      //    this.isLoading = false;
-      //    this.error = errorMessage 
-      //  })
     }else{
       authObs = this.authService.signup(form.value.email, form.value.password)
-      // .subscribe(resData=>{
-      //   console.log(resData);
-      //   this.isLoading = false;
-      //  }, errorMessage =>{
-      //    console.log(errorMessage);
-      //    this.isLoading = false;
-      //    this.error = errorMessage 
-      //  });
-      //  console.log(form.value);
     }
       authObs.subscribe(resData=>{
         console.log(resData);

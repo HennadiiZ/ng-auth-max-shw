@@ -54,6 +54,18 @@ export class AuthService{
             password,
             returnSecureToken: true
         } 
-      )
+      ).pipe(
+        catchError((errResp) => {
+          let errorMessage ='An unknown error occurred'
+          if(!errResp.error || !errResp.error.error){
+              return throwError( errorMessage);
+          }
+          switch(errResp.error.error.message){
+              case 'EMAIL_EXISTS':
+              errorMessage = 'this email already exists'
+          }
+          return throwError( errorMessage)
+        })
+    )
     }
 }

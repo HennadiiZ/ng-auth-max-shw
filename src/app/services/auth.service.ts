@@ -13,7 +13,6 @@ export interface AuthResponseData{
     registered?: boolean;
 }
 
-// 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]'
 @Injectable({providedIn: 'root'})
 export class AuthService{
 
@@ -34,9 +33,6 @@ export class AuthService{
             returnSecureToken: true
         } 
       ).pipe(catchError(this.handleError),tap(response=>{
-        // const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-        // const user = new User(response.email, response.localId, response.idToken, expDate);
-        // this.user.next(user);
         this.handleAuthentication(response.email, response.localId, response.idToken, +response.expiresIn);
       }));
     }
@@ -49,9 +45,6 @@ export class AuthService{
             returnSecureToken: true
         } 
       ).pipe(catchError(this.handleError),tap(response=>{
-        // const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-        // const user = new User(response.email, response.localId, response.idToken, expDate);
-        // this.user.next(user);
         this.handleAuthentication(response.email, response.localId, response.idToken, +response.expiresIn);
       }))
     }
@@ -92,4 +85,3 @@ export class AuthService{
     }
 }
 
-// git commit -m "(Refactoring)creating and storing the User Data 2"

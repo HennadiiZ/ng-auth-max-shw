@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
 import { throwError } from "rxjs"
@@ -34,15 +34,16 @@ export class AuthService{
         } 
       ).pipe(
           catchError((errResp) => {
-            let errorMessage ='An unknown error occurred'
-            if(!errResp.error || !errResp.error.error){
-                return throwError( errorMessage);
-            }
-            switch(errResp.error.error.message){
-                case 'EMAIL_EXISTS':
-                errorMessage = 'this email already exists'
-            }
-            return throwError( errorMessage)
+            // let errorMessage ='An unknown error occurred'
+            // if(!errResp.error || !errResp.error.error){
+            //     return throwError( errorMessage);
+            // }
+            // switch(errResp.error.error.message){
+            //     case 'EMAIL_EXISTS':
+            //     errorMessage = 'this email already exists'
+            // }
+            // return throwError( errorMessage)
+            return this.handleError(errResp)
           })
       )
     }
@@ -56,16 +57,29 @@ export class AuthService{
         } 
       ).pipe(
         catchError((errResp) => {
-          let errorMessage ='An unknown error occurred'
-          if(!errResp.error || !errResp.error.error){
-              return throwError( errorMessage);
-          }
-          switch(errResp.error.error.message){
-              case 'EMAIL_EXISTS':
-              errorMessage = 'this email already exists'
-          }
-          return throwError( errorMessage)
+        //   let errorMessage ='An unknown error occurred'
+        //   if(!errResp.error || !errResp.error.error){
+        //       return throwError( errorMessage);
+        //   }
+        //   switch(errResp.error.error.message){
+        //       case 'EMAIL_EXISTS':
+        //       errorMessage = 'this email already exists'
+        //   }
+        //   return throwError( errorMessage)
+        return this.handleError(errResp)
         })
-    )
+      )
+    }
+
+    private handleError(errResp: HttpErrorResponse){
+        let errorMessage ='An unknown error occurred'
+        if(!errResp.error || !errResp.error.error){
+            return throwError( errorMessage);
+        }
+        switch(errResp.error.error.message){
+            case 'EMAIL_EXISTS':
+            errorMessage = 'this email already exists'
+        }
+        return throwError( errorMessage)
     }
 }

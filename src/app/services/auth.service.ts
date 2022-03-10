@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError } from "rxjs/operators";
-import { throwError } from "rxjs"
+import { catchError, tap } from "rxjs/operators";
+import { Subject, throwError } from "rxjs"
+import { User } from "../models/user.model";
 export interface AuthResponseData{
     kind?: string;
     idToken: string;
@@ -20,6 +21,8 @@ export class AuthService{
     myUrlSignUp = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
     myUrlSignIn = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
     apiKey = 'AIzaSyDV1YPhVjxwFIu9_Tzds1UJeheYrvyDISs'
+  
+    user = new Subject<User>();
 
     constructor(private http: HttpClient){}
 
@@ -30,7 +33,11 @@ export class AuthService{
             password: password,
             returnSecureToken: true
         } 
-      ).pipe(catchError(this.handleError))
+      ).pipe(catchError(this.handleError),tap(response=>{
+        const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
+        const user = new User(response.email, response.localId, response.idToken, expDate);
+        this.user.next(user);
+      }));
     }
 
     login(email: string, password: string){
@@ -42,6 +49,8 @@ export class AuthService{
         } 
       ).pipe(catchError(this.handleError))
     }
+
+    //private handleAuthentication(email: string, token: string, expiresIn: number){}
 
     private handleError(errResp: HttpErrorResponse){
         let errorMessage ='An unknown error occurred'

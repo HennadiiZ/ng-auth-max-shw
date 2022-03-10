@@ -9,6 +9,7 @@ export interface AuthResponseData{
     refreshToken: string;	
     expiresIn: string;	
     localId: string;	
+    registered?: boolean;
 }
 
 // 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]'
@@ -16,7 +17,8 @@ export interface AuthResponseData{
 export class AuthService{
 
     myUrlWithKey = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]'
-    myUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
+    myUrlSignUp = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
+    myUrlSignIn = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
     apiKey = 'AIzaSyDV1YPhVjxwFIu9_Tzds1UJeheYrvyDISs'
 
     constructor(private http: HttpClient){
@@ -24,7 +26,7 @@ export class AuthService{
     }
 
     signup(email: string, password: string){
-        return  this.http.post<AuthResponseData>(`${this.myUrl}${this.apiKey}` , 
+        return  this.http.post<AuthResponseData>(`${this.myUrlSignUp}${this.apiKey}` , 
         {
             email: email,
             password: password,
@@ -42,6 +44,16 @@ export class AuthService{
             }
             return throwError( errorMessage)
           })
+      )
+    }
+
+    login(email: string, password: string){
+        return  this.http.post<AuthResponseData>(`${this.myUrlSignIn}${this.apiKey}` , 
+        {
+            email,
+            password,
+            returnSecureToken: true
+        } 
       )
     }
 }

@@ -21,9 +21,7 @@ export class AuthService{
     myUrlSignIn = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
     apiKey = 'AIzaSyDV1YPhVjxwFIu9_Tzds1UJeheYrvyDISs'
 
-    constructor(private http: HttpClient){
-
-    }
+    constructor(private http: HttpClient){}
 
     signup(email: string, password: string){
         return  this.http.post<AuthResponseData>(`${this.myUrlSignUp}${this.apiKey}` , 
@@ -32,20 +30,7 @@ export class AuthService{
             password: password,
             returnSecureToken: true
         } 
-      ).pipe(
-          catchError((errResp) => {
-            // let errorMessage ='An unknown error occurred'
-            // if(!errResp.error || !errResp.error.error){
-            //     return throwError( errorMessage);
-            // }
-            // switch(errResp.error.error.message){
-            //     case 'EMAIL_EXISTS':
-            //     errorMessage = 'this email already exists'
-            // }
-            // return throwError( errorMessage)
-            return this.handleError(errResp)
-          })
-      )
+      ).pipe(catchError(this.handleError))
     }
 
     login(email: string, password: string){
@@ -55,20 +40,7 @@ export class AuthService{
             password,
             returnSecureToken: true
         } 
-      ).pipe(
-        catchError((errResp) => {
-        //   let errorMessage ='An unknown error occurred'
-        //   if(!errResp.error || !errResp.error.error){
-        //       return throwError( errorMessage);
-        //   }
-        //   switch(errResp.error.error.message){
-        //       case 'EMAIL_EXISTS':
-        //       errorMessage = 'this email already exists'
-        //   }
-        //   return throwError( errorMessage)
-        return this.handleError(errResp)
-        })
-      )
+      ).pipe(catchError(this.handleError))
     }
 
     private handleError(errResp: HttpErrorResponse){

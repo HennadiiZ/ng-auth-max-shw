@@ -93,6 +93,14 @@ export class AuthService{
         }
         return throwError( errorMessage)
     }
+
+    // autoLogin(){
+    //     const userData = JSON.parse(localStorage.getItem('userData'));
+    //     if(!userData){
+    //         return;
+    //     }
+    //     const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpirationDate) );
+    // }
     
     logout(){
         this.user.next(null);

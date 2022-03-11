@@ -83,5 +83,9 @@ export class AuthService{
         }
         return throwError( errorMessage)
     }
+
+    isAuthenticated(){
+        this.user
+    }
 }
 

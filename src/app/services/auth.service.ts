@@ -69,6 +69,7 @@ export class AuthService{
             expDate, 
         );
         this.user.next(user);
+        localStorage.setItem('userData', JSON.stringify(user));
     }
 
     private handleError(errResp: HttpErrorResponse){

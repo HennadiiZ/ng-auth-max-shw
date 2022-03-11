@@ -28,30 +28,28 @@ export class DataStorageService {
       });
   }
 
-  fetchRecipes() {
-    // this.authService.user.pipe(take(1)).subscribe(user=>{  })// take one time and unsubscribe.  
-    return this.authService.user.pipe(take(1), exhaustMap(user =>{ // exhaustMap() waits for the first Observable to complete and return a new Observable
+  fetchRecipes(){
       return this.http
       .get<Recipe[]>(
         `${this.myUrl}recipes.json`,
-        // `${this.myUrl}recipes.json?auth=` + user.token
-        {
-          params : new HttpParams().set('auth', user.token)
-        }
+        // {
+        //   params : new HttpParams().set('auth', user.token)
+        // }
+      ).pipe(
+        map(recipes => {
+          return recipes.map(recipe => {
+            return {
+              ...recipe,
+              ingredients: recipe.ingredients ? recipe.ingredients : []
+            };
+          });
+        }),
+        tap(recipes => {
+          this.recipeService.setRecipes(recipes);
+        })
       )
-    }),
-    map(recipes => {
-      return recipes.map(recipe => {
-        return {
-          ...recipe,
-          ingredients: recipe.ingredients ? recipe.ingredients : []
-        };
-      });
-    }),
-    tap(recipes => {
-      this.recipeService.setRecipes(recipes);
-    })
-    ); 
   }
+
+
 
 }

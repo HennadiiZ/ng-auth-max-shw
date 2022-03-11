@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, Subject, throwError } from "rxjs"
 import { User } from "../models/user.model";
+import { RecipeService } from "../recipes/recipe.service";
 export interface AuthResponseData{
     kind?: string;
     idToken: string;
@@ -23,10 +24,10 @@ export class AuthService{
   
     // user = new Subject<User>();
     // user = new BehaviorSubject<User>(null);
-    user = new BehaviorSubject<any>(null);
+    user = new BehaviorSubject<User | any >(null);
 
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private recipeService: RecipeService){}
 
     signup(email: string, password: string){
         return  this.http.post<AuthResponseData>(`${this.myUrlSignUp}${this.apiKey}` , 

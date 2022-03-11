@@ -4,6 +4,7 @@ import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, Subject, throwError } from "rxjs"
 import { User } from "../models/user.model";
 import { RecipeService } from "../recipes/recipe.service";
+import { Router } from "@angular/router";
 export interface AuthResponseData{
     kind?: string;
     idToken: string;
@@ -27,7 +28,11 @@ export class AuthService{
     user = new BehaviorSubject<User | any >(null);
 
 
-    constructor(private http: HttpClient, private recipeService: RecipeService){}
+    constructor(
+        private http: HttpClient, 
+        private recipeService: RecipeService,
+        private router: Router
+    ){}
 
     signup(email: string, password: string){
         return  this.http.post<AuthResponseData>(`${this.myUrlSignUp}${this.apiKey}` , 
@@ -87,9 +92,10 @@ export class AuthService{
         }
         return throwError( errorMessage)
     }
-
-    // isAuthenticated(){
-    //     this.user
-    // }
+    
+    logout(){
+        this.user.next(null);
+        this.router.navigate(['/auth']);
+    }
 }
 
